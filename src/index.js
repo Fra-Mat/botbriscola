@@ -19,6 +19,7 @@ const openai = new OpenAI({
 
 bot.start(async (ctx) => {
     const chatId = ctx.chat.id
+<<<<<<< HEAD
     await ctx.reply(`Ciao! Sono il BriscoloneBot. Inserisci il nome del tuo giocatore preceduto da /createuser 😎 `)
 })
 
@@ -63,6 +64,30 @@ bot.launch(() => {
     console.log('Il bot funziona ;D')
 }).catch((err) => {
     console.error('Il bot NON funziona :(', err)
+=======
+    await ctx.reply(`Hello! Your chat ID is ${chatId}`)
+})
+
+/*bot.on(message("text"), async (ctx) => {
+    const message = ctx.message.text
+    await ctx.reply(`Hai scritto: ${message}`)
+})
+ */
+bot.command('ranking', (ctx) => {
+    ctx.reply('ecco la classifica generale')
+    console.log(ctx)
+    const idchat = ctx.update.message.chat.id
+    const arrayOrdinato = data[idchat].sort((utente1,utente2) => utente2.punteggio - utente1.punteggio)
+    ctx.reply(arrayOrdinato)
+    ctx.reply("ciaobello")
+});
+/* ===================== LAUNCH ===================== */
+
+bot.launch(() => {
+    console.log('the bot is started correctly')
+}).catch((err) => {
+    console.error('Error starting bot', err)
+>>>>>>> 2a26ffff862418edc49b8f04e16392746a5fc2d8
 })
 
 // Enable graceful stop
