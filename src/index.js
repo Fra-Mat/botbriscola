@@ -1,6 +1,6 @@
 //// TO - DO 
-//listare gli utenti, segnare punteggi utenti
-// listare le info di (tutti?) gli utenti
+//listare gli data.utenti, segnare punteggi data.utenti
+// listare le info di (tutti?) gli data.utenti
 
 
 const OpenAI = require("openai")
@@ -30,7 +30,6 @@ bot.start(async (ctx) => {
 const arr_user = []
 const arr_alias = []
 const arr_punteggi =[]
-const utenti = []
 let id_chiamante = 0
 let id_chiamato = 0
 let chiamato = ""
@@ -45,24 +44,24 @@ bot.command('create', async (ctx) => {
     let nomisplit = ctx.payload.split("-")
     let alias_obj = nomisplit[0]
     let user_obj = nomisplit[1]
-    utenti.push({
+    data.utenti.push({
         alias: alias_obj,
         user: user_obj,
         punti: 0,
     })
-    ctx.reply(`Punteggio registrato. Ciao ${utenti[conta].user}, il nome che hai scelto è ${utenti[conta].alias}`)
-    console.log(utenti)
+    ctx.reply(`Punteggio registrato. Ciao ${data.utenti[conta].user}, il nome che hai scelto è ${data.utenti[conta].alias}`)
+    console.log(data.utenti)
     conta++;
 },
 //////LISTA
 bot.command('list', async (ctx) =>{
-        if(utenti.length === 0){
+        if(data.utenti.length === 0){
             ctx.reply("Nessun utente registrato al momento. Utilizza il comando /crea [ALIAS]-[USER] per creare un nuovo utente.")
         }else{
             await ctx.reply("USER         ALIAS       PUNTI ATTUALI")
             let j = 0
-            while(j<utenti.length){
-                ctx.reply(`${j+1}: ${utenti[j].user}       ${utenti[j].alias}    ${utenti[j].punti} punti`)
+            while(j<data.utenti.length){
+                ctx.reply(`${j+1}: ${data.utenti[j].user}       ${data.utenti[j].alias}    ${data.utenti[j].punti} punti`)
                 j = j + 1
             }  
         }
@@ -101,16 +100,16 @@ bot.command("match", async (ctx) =>{
             risultato = matchsplit[2]
             console.log(matchsplit)
             //RICERCA CHIAMANTE
-            for(let i = 0; i<utenti.length; i++){
-                if(utenti[i].alias === chiamante){
+            for(let i = 0; i<data.utenti.length; i++){
+                if(data.utenti[i].alias === chiamante){
                     id_chiamante = i
                 }
             }
 
             }
             //RICERCA CHIAMATO
-            for (let j = 0; j < utenti.length; j++) {
-                if (utenti[j].alias === chiamato){
+            for (let j = 0; j < data.utenti.length; j++) {
+                if (data.utenti[j].alias === chiamato){
                     id_chiamato = j
                 }
      
@@ -119,26 +118,26 @@ bot.command("match", async (ctx) =>{
             //situazione vincita chiamante
             if(risultato=="w"){
  
-                utenti[id_chiamante].punti = utenti[id_chiamante].punti + 3
-                utenti[id_chiamato].punti = utenti[id_chiamato].punti + 2
+                data.utenti[id_chiamante].punti = data.utenti[id_chiamante].punti + 3
+                data.utenti[id_chiamato].punti = data.utenti[id_chiamato].punti + 2
                 //altri = -1
 
-                for(let i =0; i<utenti.length; i++){
-                        utenti[i].punti = utenti[i].punti -1
+                for(let i =0; i<data.utenti.length; i++){
+                        data.utenti[i].punti = data.utenti[i].punti -1
 
                 }
-                console.log(utenti) 
+                console.log(data.utenti) 
             }
             //situazione perdita chiamante, vincita chiamato
             if(risultato=="l"){
-                utenti[id_chiamante].punti = utenti[id_chiamante].punti - 3
-                utenti[id_chiamato].punti = utenti[id_chiamato].punti - 2
+                data.utenti[id_chiamante].punti = data.utenti[id_chiamante].punti - 3
+                data.utenti[id_chiamato].punti = data.utenti[id_chiamato].punti - 2
                 //altri = +1
-                for(let j =0; j<utenti.length; j++){
-                        utenti[j].punti = utenti[j].punti +1
+                for(let j =0; j<data.utenti.length; j++){
+                        data.utenti[j].punti = data.utenti[j].punti +1
                 }
 
-                console.log(utenti) 
+                console.log(data.utenti) 
 
             }
             ctx.reply("Punteggio registrato!")
@@ -156,32 +155,32 @@ bot.command("match", async (ctx) =>{
         risultato = autocallsplit[1]
         console.log(autocallsplit)
         //RICERCA CHIAMANTE
-        for(let l = 0; l<utenti.length; l++){
-            if(utenti[l].alias === chiamante){
+        for(let l = 0; l<data.utenti.length; l++){
+            if(data.utenti[l].alias === chiamante){
                 id_chiamante = l
             }
         }
         console.log(id_chiamante)
 
         if(risultato=="w"){
-            utenti[id_chiamante].punti = (utenti[id_chiamato].punti) +5
+            data.utenti[id_chiamante].punti = (data.utenti[id_chiamato].punti) +5
             //altri = -1 each
-            for(let m =0; m<utenti.length; m++){
-                    utenti[m].punti = utenti[m].punti -1
+            for(let m =0; m<data.utenti.length; m++){
+                    data.utenti[m].punti = data.utenti[m].punti -1
                 } 
             }
 
 
         }
         if(risultato=="l"){
-            utenti[id_chiamante].punti = utenti[id_chiamato].punti -5
+            data.utenti[id_chiamante].punti = data.utenti[id_chiamato].punti -5
             //altri = +1 each
-            for(let n =0; n<utenti.length; n++){
+            for(let n =0; n<data.utenti.length; n++){
 
-                utenti[n].punti = utenti[n].punti +1
+                data.utenti[n].punti = data.utenti[n].punti +1
             }
 
-            console.log(utenti) 
+            console.log(data.utenti) 
 
        
     
@@ -201,7 +200,7 @@ bot.command("match", async (ctx) =>{
 bot.command('help', async (ctx) => {
     await ctx.reply("Ecco qui tutte le azioni che puoi fare con questo bot!")
     await ctx.reply("/create [alias]-[telegramusername] --> Prima di tutto, con questa opzione potrai creare un giocatore collegato ad un username. È consigliato crearene 5.")
-    await ctx.reply("/list --> Con cui puoi visualizzare la lista di utenti registrati per questa partita.")
+    await ctx.reply("/list --> Con cui puoi visualizzare la lista di data.utenti registrati per questa partita.")
     await ctx.reply("/typeset [MODALITA'] --> Per settare i due tipi di gioco. [standard] è la modalità standard, con chiamante o chiamato, mentre [autocall] è la modalità con chiamata in mano.")
     await ctx.reply("/match --> Per segnare i punti del gioco")
     await ctx.reply("/ranking --> Visualizza la classifica attuale.")
@@ -209,18 +208,16 @@ bot.command('help', async (ctx) => {
 
 
 
-
-
 bot.command('ranking', async (ctx) => {
-    let rank = utenti.sort((a, b) => parseFloat(b.punti) - parseFloat(a.punti));
+    let rank = data.utenti.sort((a, b) => parseFloat(b.punti) - parseFloat(a.punti));
     console.log(rank)
-    if(utenti.length === 0){
+    if(data.utenti.length === 0){
         ctx.reply("Nessun utente registrato al momento, classifica vuota. Utilizza il comando /crea [ALIAS]-[USER] per creare un nuovo utente.")
     }else{
         await ctx.reply('Ecco il ranking:')
         await ctx.reply("CLASSIFICA         ALIAS DI       PUNTI ATTUALI")
         let j = 0
-        while(j<utenti.length){
+        while(j<data.utenti.length){
             ctx.reply(`Posizione ${j+1}: ${rank[j].alias}       ${rank[j].alias}    ${rank[j].punti} punti`)
             j = j + 1
         }  
@@ -229,7 +226,39 @@ bot.command('ranking', async (ctx) => {
     
 
 
-},
+})
+
+/* ===================== OPEN AI INTERACTION ===================== */
+
+bot.on(message("text"), async (ctx) => {
+    const message = ctx.message.text
+    const chatId = ctx.chat.id
+
+    const users = [{
+        id: "Alessandro",
+        aliases: ["Alessandro", "Sandro"]
+    }]
+
+    const response = await utils.completionWithFunctions({
+        openai,
+        prompt: message,
+        functions,
+        messages: [{
+            role: "system",
+            content: `
+                =========================================
+                La chat ID è ${ chatId }
+                ========================================
+                Questo è il contesto sugli utenti:
+                ${ JSON.stringify(users) }
+                ========================================
+        `
+        
+        }]
+    })
+
+    await ctx.reply(response)
+})
 
 /* ===================== LAUNCH ===================== */
 
@@ -241,4 +270,4 @@ bot.launch(() => {
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT")),
-process.once("SIGTERM", () => bot.stop("SIGTERM")))
+process.once("SIGTERM", () => bot.stop("SIGTERM"))
